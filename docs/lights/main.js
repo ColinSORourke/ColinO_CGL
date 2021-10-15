@@ -129,7 +129,7 @@ options = {
   seed: 7,
   isPlayingBgm: true,
   isReplayEnabled: true,
-  theme: "dark",
+  theme: "dark"
 };
 
 function update() {
@@ -146,7 +146,7 @@ function update() {
     }
   }
 
-  if (floor(ticks/80) == ticks/80){
+  if (floor(ticks/60) == ticks/60){
     const posX = rnd(0, G.WIDTH);
     const posY = 10;
     let i = rnd()

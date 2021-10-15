@@ -74,7 +74,7 @@ options = {
   isPlayingBgm: true,
   isReplayEnabled: true,
   theme: "pixel", 
-  isDrawingParticleFront: true
+  isDrawingParticleFront: true,
 };
 
 function update() {

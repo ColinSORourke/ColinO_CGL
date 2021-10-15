@@ -102,7 +102,7 @@ options = {
   isPlayingBgm: true,
   isReplayEnabled: true,
   theme: "simple",
-  isDrawingParticleFront: true
+  isDrawingParticleFront: true,
 };
 
 function update() {
@@ -171,7 +171,7 @@ function update() {
       speed: 0.3 + (rndi(0, difficulty+1)/10),
     }
     r.push(newObj)
-    if (difficulty > rndi(0,10)){
+    if (difficulty * 1.5 > rndi(0,10)){
       const posX2 = rnd(0, G.WIDTH)
       let newObj2 = {
         pos: vec(posX2, posY),
@@ -179,7 +179,7 @@ function update() {
       }
       r.push(newObj2)
     }
-    if (difficulty > rndi(1,10)){
+    if (difficulty * 1.5 > rndi(1,15)){
       const posX3 = rnd(0, G.WIDTH)
       let newObj3 = {
         pos: vec(posX3, posY),
@@ -227,7 +227,7 @@ function update() {
       color("light_yellow")
       particle(player.pos, player.pCount * 2, 2)
       play("coin")
-      myAddScore(player.pCount * (1 + floor(player.pCount/3)/2), G.WIDTH/2 - 3, G.HEIGHT/2 - 8, "light_yellow")
+      myAddScore(player.pCount * (1 + floor((player.pCount - 1)/3)/2), G.WIDTH/2 - 3, G.HEIGHT/2 - 8, "light_yellow")
       player.pCount = 0
     }
   }
