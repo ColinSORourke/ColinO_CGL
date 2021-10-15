@@ -114,7 +114,7 @@ const G = {
   STAR_SPEED_MIN: 0.12,
   STAR_SPEED_MAX: 0.24,
 
-  TIMER_MAX: 3000,
+  TIMER_MAX: 2400,
 }
 
 let colors = {
@@ -132,8 +132,11 @@ options = {
   theme: "dark"
 };
 
+let startTimer;
+
 function update() {
   if (!ticks) {
+    startTimer = false;
     stars = []
     scores = []
     player = {
@@ -175,7 +178,7 @@ function update() {
   }
 
   if (input.isJustPressed){
-    player.timer -= 45
+    player.timer -= 60
     colors.bg = "light_blue"
     colors.bulb = "black"
     colors.ground = "green"
@@ -228,8 +231,9 @@ function update() {
     mirror: {x: side},
   })
   
-
-  player.timer -= 1 + (difficulty-1)/3;
+  if (startTimer){
+    player.timer -= 1 + (difficulty-1)/3;
+  }
   if (player.timer <= 0){
     end()
   }
@@ -271,7 +275,9 @@ function update() {
         play("jump")
       }
     }
-
+    if (belowGround || collidePlayer){
+      startTimer = true;
+    }
     return(belowGround || collidePlayer)
   })
 
