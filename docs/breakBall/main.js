@@ -65,8 +65,8 @@ const G = {
   WIDTH: 150,
   HEIGHT: 150
 }
-let centerS = 0;
-let modRate = 0.15;
+let centerS;
+let modRate;
 
 options = {
   viewSize: {x: G.WIDTH, y: G.HEIGHT},
@@ -79,6 +79,9 @@ options = {
 
 function update() {
   if (!ticks) {
+    modRate = 0.15;
+    centerS = 0;
+    console.log("Initialize")
     scores = [];
     balls = [];
     obj = {
@@ -92,7 +95,6 @@ function update() {
       leftPoint: vec(G.WIDTH/2 + cos((PI/6)*5)*30, G.HEIGHT/2 + sin((PI/6)*5)*30),
       lives: 4
     }
-    obj.size = 30;
   }
 
   if (obj.lives <= 0){
