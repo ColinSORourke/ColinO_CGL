@@ -1,6 +1,7 @@
 title = "BEE";
 
-description = `BEE
+description = `[Click] to move
+Gather Pollen
 `;
 
 characters = [
@@ -199,7 +200,6 @@ function update() {
     }
     player.drawTarget = true;
     player.angle = player.pos.angleTo(player.target)
-    console.log(player.angle)
     play("select")
   }
   
