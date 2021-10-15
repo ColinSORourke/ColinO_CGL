@@ -208,7 +208,7 @@ function update() {
     
     if (bColl.black){
       if (b.hits >= 0){
-        myAddScore(1, obj.center.x-2, obj.center.y - 15)
+        myAddScore(5, obj.center.x-2, obj.center.y - 15)
         color("black")
         particle(obj.center, 10, 5)
         play("coin")
@@ -220,10 +220,6 @@ function update() {
         play("hit")
         remove = true
       }
-    }
-
-    if (b.hits >= 6){
-      remove = true
     }
     return remove;
   })
