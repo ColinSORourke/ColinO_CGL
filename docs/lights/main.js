@@ -2,8 +2,8 @@ title = "Light Switch";
 
 description = `
 [Hold] to stop 
-moving and 
-turn on lights
+& turn on lights
+Collect items
 `;
 
 characters = [
@@ -126,7 +126,7 @@ let colors = {
 
 options = {
   viewSize: {x: G.WIDTH, y: G.HEIGHT},
-  seed: 7,
+  seed:10,
   isPlayingBgm: true,
   isReplayEnabled: true,
   theme: "dark"

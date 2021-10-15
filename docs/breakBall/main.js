@@ -1,7 +1,9 @@
-title = "BreakBall";
+title = "JugglePong";
 
 description = `
-Rotate
+[Hold] Rotate
+Reflect Yellow
+Collect White
 `;
 
 characters = [
