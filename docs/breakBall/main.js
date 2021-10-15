@@ -81,7 +81,6 @@ function update() {
   if (!ticks) {
     modRate = 0.15;
     centerS = 0;
-    console.log("Initialize")
     scores = [];
     balls = [];
     obj = {
