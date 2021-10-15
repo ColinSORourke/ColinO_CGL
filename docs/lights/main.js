@@ -201,6 +201,11 @@ function update() {
       player.pos.x -= player.speed
     }
   }
+  if (input.isPressed){
+    if ((floor(ticks / 60) % 2 == 1){
+      player.facing = !player.facing
+    }
+  }
 
   // Background Box
   color(colors.bg);
