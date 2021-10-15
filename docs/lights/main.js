@@ -68,6 +68,7 @@ pplppp
  * pos: Vector,
  * speed: number,
  * char: string,
+ * color: string,
  * }} Star
  */
 
@@ -76,6 +77,19 @@ pplppp
  */
 let stars;
 
+/**
+ * @typedef {{
+ * pos: Vector,
+ * age: number,
+ * score: number,
+ * color: string,
+ * }} Score
+ */
+
+/**
+ * @type { Score []}
+ */
+let scores;
 
 /**
  * @typedef {{
@@ -84,6 +98,7 @@ let stars;
  * facing: boolean,
  * match: string,
  * streak: number,
+ * timer: number
  * }} Player
  */
 
@@ -98,6 +113,8 @@ const G = {
 
   STAR_SPEED_MIN: 0.12,
   STAR_SPEED_MAX: 0.24,
+
+  TIMER_MAX: 3000,
 }
 
 let colors = {
@@ -118,12 +135,14 @@ options = {
 function update() {
   if (!ticks) {
     stars = []
+    scores = []
     player = {
         pos: vec(G.WIDTH * 0.5, G.HEIGHT -19),
         speed: 0.5,
         facing: true,
         match: "z",
         streak: 0,
+        timer: G.TIMER_MAX
     }
   }
 
@@ -132,24 +151,31 @@ function update() {
     const posY = 10;
     let i = rnd()
     let char;
+    let color;
     if (i < 0.25){
       char = "d"
+      color = "green"
     } else if (i < 0.5){
       char = "e"
+      color = "red"
     } else if (i < 0.75){
       char = "f"
+      color = "cyan"
     } else {
       char = "g"
+      color = "purple"
     }
     let newObj = {
       pos: vec(posX, posY),
       speed: rnd(G.STAR_SPEED_MIN, G.STAR_SPEED_MAX),
-      char: char
+      char: char,
+      color: color
     }
     stars.push(newObj)
   }
 
   if (input.isJustPressed){
+    player.timer -= 45
     colors.bg = "light_blue"
     colors.bulb = "black"
     colors.ground = "green"
@@ -165,6 +191,7 @@ function update() {
   }
 
   if (!input.isPressed){
+    
     if (player.pos.x > 100 || player.pos.x < 0){
       player.facing = !player.facing
     }
@@ -195,6 +222,19 @@ function update() {
     // @ts-ignore
     mirror: {x: side},
   })
+  
+
+  player.timer -= 1 + (difficulty-1)/3;
+  if (player.timer <= 0){
+    end()
+  }
+  color('yellow')
+  rect(5, 142, 90 * (player.timer/G.TIMER_MAX), 6)
+  if (player.streak > 0){
+    color('black')
+    char(player.match, G.WIDTH/2, G.HEIGHT - 5)
+  }
+  
 
   // Draw and remove stars
   remove(stars, (s) => {
@@ -209,7 +249,9 @@ function update() {
     if (collidePlayer){
       if (s.char == player.match){
         player.streak += 1;
-        addScore(player.streak)
+        player.timer += 100 * Math.min(player.streak, 6)
+        player.timer = Math.min(G.TIMER_MAX, player.timer)
+        myAddScore(player.streak, player.pos.x, player.pos.y, s.color)
         if (player.streak > 5){
           play("coin")
         } else {
@@ -218,7 +260,9 @@ function update() {
       } else {
         player.match = s.char;
         player.streak = 1;
-        addScore(player.streak)
+        player.timer += 150
+        player.timer = Math.min(G.TIMER_MAX, player.timer)
+        myAddScore(player.streak, player.pos.x, player.pos.y, s.color)
         play("jump")
       }
     }
@@ -233,4 +277,24 @@ function update() {
   // ground
   color(colors.ground)
   rect(0, 134, 100, 6)
+
+  remove(scores, (s) => {
+    color(s.color)
+    s.pos.y -= 0.1
+    text("+" + s.score, s.pos)
+    s.age -= 1
+    let disappear = (s.age <= 0)
+    return disappear
+  })
+}
+
+function myAddScore(value, x = G.WIDTH/2, y = G.HEIGHT/2, color = "black", time = 60){
+  let score = {
+    pos: vec(x,y),
+    age: time,
+    score: value,
+    color: color
+  }
+  scores.push(score)
+  addScore(value);
 }
