@@ -28,7 +28,7 @@ RRRRR
 ggg
   g
 `,`
-  BB
+   B
   BB
  BBBB
 BBbbwB
