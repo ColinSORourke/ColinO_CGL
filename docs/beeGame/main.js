@@ -212,12 +212,15 @@ function update() {
   if (player.pCount > 0){
     let offset = Math.max( ceil(3 - player.pCount/3), 1)
     box(player.pos.x + offset*side, player.pos.y + 2, ceil(player.pCount/3))
+    text("~" + floor(player.pCount * (1 + floor((player.pCount - 1)/3)/2)) + "~", G.WIDTH/2 -6, 3);
   }          
   color("black")
   char(addWithCharCode("a", (floor(ticks / 20) % 2)), player.pos, {
     // @ts-ignore
     mirror: {x: side},
   })
+
+  
   
   color("transparent")
   let hiveColl = rect(58, 58, 12, 12).isColliding.char
