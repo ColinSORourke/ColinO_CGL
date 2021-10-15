@@ -92,6 +92,7 @@ function update() {
       leftPoint: vec(G.WIDTH/2 + cos((PI/6)*5)*30, G.HEIGHT/2 + sin((PI/6)*5)*30),
       lives: 4
     }
+    obj.size = 30;
   }
 
   if (obj.lives <= 0){
@@ -163,12 +164,12 @@ function update() {
     let myColor = (b.hits >= 0)
         ? "light_black"
         : "yellow"
-    let size = (b.hits >= 0)
+    let bSize = (b.hits >= 0)
         ? 3
         : 4
 
     color(myColor);
-    let bColl = box(b.pos, size).isColliding.rect;
+    let bColl = box(b.pos, bSize).isColliding.rect;
     if(bColl.light_blue || bColl.light_red || bColl.light_green){
       b.velocity.rotate(PI)
       b.pos.add(b.velocity)
