@@ -163,9 +163,12 @@ function update() {
     let myColor = (b.hits >= 0)
         ? "light_black"
         : "yellow"
+    let size = (b.hits >= 0)
+        ? 3
+        : 4
 
     color(myColor);
-    let bColl = box(b.pos, 4).isColliding.rect;
+    let bColl = box(b.pos, size).isColliding.rect;
     if(bColl.light_blue || bColl.light_red || bColl.light_green){
       b.velocity.rotate(PI)
       b.pos.add(b.velocity)
