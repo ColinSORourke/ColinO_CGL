@@ -275,7 +275,7 @@ function update() {
         play("jump")
       }
     }
-    if (belowGround || collidePlayer){
+    if ((belowGround || collidePlayer) && !startTimer){
       startTimer = true;
     }
     return(belowGround || collidePlayer)
