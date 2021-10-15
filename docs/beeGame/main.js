@@ -200,7 +200,7 @@ function update() {
     }
     player.drawTarget = true;
     player.angle = player.pos.angleTo(player.target)
-    play("select")
+    //play("select")
   }
   
   // Draw Player
