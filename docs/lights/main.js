@@ -202,7 +202,7 @@ function update() {
     }
   }
   if (input.isPressed){
-    if ((floor(ticks / 60) % 2 == 1){
+    if ((floor(ticks / 30) == ticks/30)){
       player.facing = !player.facing
     }
   }
