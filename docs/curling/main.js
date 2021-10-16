@@ -144,6 +144,7 @@ function update() {
     objects = times(rndi(5, 10), () => {
       let y = rndi(13, 67)
       x += rndi(60,120)
+      console.log(x);
       return {
         trueX: x,
         y: y,
@@ -180,10 +181,20 @@ function update() {
     }
   }
 
+  color('light_red');
+  if (puck.trueX <= G.PARADIST){
+    line(20,0, 20,80, 2);
+  } else if (puck.trueX <= G.PARADIST + 20){
+    let x = G.PARADIST + 20 - puck.trueX;
+    line(x, 0, x,80);
+  }
+
   // WALLS
   color('light_cyan');
   rect(0, 0, G.WIDTH, G.PUCKPOSMIN - 3);
   rect(0, G.PUCKPOSMAX + 3, G.WIDTH, G.HEIGHT - G.PUCKPOSMAX - 3);
+
+  
 
   if (puck.speed >= 0.6 && puck.state == STATE.FREE){
     color("light_black")
@@ -214,7 +225,7 @@ function update() {
 
   color("black");
   remove(objects, (o) => {
-    let relativeX = o.trueX - puck.trueX 
+    let relativeX = o.trueX - Math.max(G.PARADIST, puck.trueX) 
     let disappear = (G.PARADIST + relativeX <= 0 - o.radius);
     if (relativeX - o.radius <= G.WIDTH - G.PARADIST){
       var collider = char("b", G.PARADIST + relativeX, o.y).isColliding;
