@@ -223,6 +223,7 @@ function update() {
       if (input.isJustPressed) {
         // do set position
         // switch to STATE.ANGLE
+        play("select");
         puck.lives--;
         puck.state = STATE.ANGLE;
       }
@@ -247,6 +248,7 @@ function update() {
         // reset puck.reverse for use in STATE.POWER
         puck.reverse = true;
         // switch to STATE.POWER
+        play("select");
         puck.state = STATE.POWER;
       }
     break;
@@ -274,6 +276,7 @@ function update() {
       if (input.isJustPressed) {
         // puck.speed is auto setup above!
         // switch to STATE.FREE
+        play("select");
         puck.state = STATE.FREE;
       }
     break;
@@ -330,7 +333,7 @@ function update() {
         if (relativeX - target.outerRadius <= G.WIDTH - G.PARADIST) {
           let targetCenter = vec(G.PARADIST + relativeX, target.y);
           distance = puck.pos.distanceTo(targetCenter);
-          let score = 500 - distance - (floor(distance/target.innerRadius) * distance);
+          let score = 500 - distance * 2 - (floor(distance/target.innerRadius) * distance) * 3;
           clamp(score, 0, 1000);
           if ((floor(distance/target.innerRadius) == 0)) { myAddScore(score * 2); play("lucky"); } else { myAddScore(score); play("coin"); }
           //100 - distance - (floor(distance/innerRadius) * distance) - (floor(distance/outerRadius) * distance)
