@@ -146,6 +146,7 @@ function update() {
   color('black')
   let puckColl = char("a", puck.pos).isColliding.rect.light_cyan;
 
+  // THIS NEEDS TO BE TWEAKED SUCH THAT OBJECTS DON'T MOVE UNTIL PUCK IS AT PARADIST
   remove(objects, (o) => {
     let relativeX = o.trueX - puck.trueX 
     if (relativeX - o.radius <= G.WIDTH - G.PARADIST){
@@ -206,6 +207,7 @@ function update() {
       rect(G.WIDTH/2 - 20, G.HEIGHT - 6, (puck.speed/G.PUCKSPEEDMAX) * 40, 5);
       // reuse our reverse logic for STATE.ANGLE, 
       // determines power bar growth && puck.speed value from 0 - 100
+      
       if(floor(ticks/15) == ticks/15) {
         if(puck.reverse) {
           puck.speed += 0.3;
@@ -235,7 +237,7 @@ function update() {
       } else { 
         // Parallax Effects
       }
-      
+      // I TWEAKED THIS AND IT'S KINDA BAD NOW
       if(puckColl){
         // change angle direction
         puck.angle = -puck.angle;
