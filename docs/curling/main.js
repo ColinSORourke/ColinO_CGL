@@ -34,8 +34,8 @@ const G = {
   
   PUCKANGLE: 0.01,
   DIRLENGTH: 25,
-  PUCKANGLEMAX: Math.PI/4,
-  PUCKANGLEMIN: -Math.PI/4,
+  PUCKANGLEMAX: PI/4,
+  PUCKANGLEMIN: -PI/4,
 
   PUCKSPEEDMAX: 2,
   PUCKSPEEDMIN: 1,
@@ -48,6 +48,12 @@ const G = {
 // PUCK VERT is the speed the Puck moves up and down in vertical selection
 // PUCK ANGLE is the speed the angle moves up and down in angle selection
 // PUCK SPEED is the max/min horizontal speed (it controls our power bar width and our puck speed)
+
+// WITH OUR CURRENT NUMBERS
+// MAX POWER GOES 16m unaided + unimpeded
+// MIN POWER GOES 4m unaided + unimpeded
+// The average distance at 9 objects is 14m
+// The average distance at 3 objects is 6m
 
 const STATE = {
   POSITION: 0,
@@ -160,7 +166,7 @@ function update() {
     distance = -1;
 
     let x = G.PARADIST;
-    objects = times(rndi(3, 10), () => {
+    objects = times(rndi(3, 9), () => {
       let y = rndi(13, 67)
       
       x += rndi(G.WIDTH/5,G.WIDTH/2)
@@ -231,7 +237,7 @@ function update() {
     color("light_black")
     lines.forEach((v) => {
 
-      line(v.x, v.y, v.x + 40 * ((Math.pow(puck.speed,1.5))/2), v.y, 0.5);
+      line(v.x, v.y, v.x + 40 * ((pow(puck.speed,1.5))/2), v.y, 0.5);
       v.x -= puck.speed*2 + 1
       if (v.x <= -40 * ((puck.speed)/2)){
         v.x = wrap(v.x, -40 * ((puck.speed)/2), G.WIDTH)
@@ -265,7 +271,7 @@ function update() {
       }
     }
     return disappear;
-  });
+  }); 
 
   color("transparent");
   let scrubCollider = rect(input.pos, 4).isColliding.char.a;
@@ -302,8 +308,8 @@ function update() {
       } else {
         puck.angle -= G.PUCKANGLE;
       }
-      puck.target.x = puck.pos.x + Math.cos(puck.angle)*G.DIRLENGTH;
-      puck.target.y = puck.pos.y + Math.sin(puck.angle)*G.DIRLENGTH;
+      puck.target.x = puck.pos.x + cos(puck.angle)*G.DIRLENGTH;
+      puck.target.y = puck.pos.y + sin(puck.angle)*G.DIRLENGTH;
       color("light_black");
       line(puck.pos, puck.target, 1);
       if (puck.angle > G.PUCKANGLEMAX || puck.angle < G.PUCKANGLEMIN || puck.target.y > G.PUCKPOSMAX+3 || puck.target.y < G.PUCKPOSMIN-3){
@@ -370,8 +376,8 @@ function update() {
         }
       }
 
-      puck.target.x = Math.cos(puck.angle)* (puck.speed);
-      puck.target.y = Math.sin(puck.angle)* (puck.speed);
+      puck.target.x = cos(puck.angle)* (puck.speed);
+      puck.target.y = sin(puck.angle)* (puck.speed);
       // POSSIBLE PARALLAX EFFECT IF WE WANT A LANE LONGER THAN 200 PIXELS
       puck.pos.y += puck.target.y;
       puck.trueX += puck.target.x;
@@ -449,7 +455,7 @@ function update() {
         //empty and repopulate objects array
         objects = [];
         let x = G.PARADIST;
-        objects = times(rndi(3, 10), () => {
+        objects = times(rndi(3, 9), () => {
           let y = rndi(13, 67)
           x += rndi(G.WIDTH/5,G.WIDTH/2)
           return {
