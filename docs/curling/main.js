@@ -108,6 +108,11 @@ let objects;
 let target;
 
 /**
+ * @type { Vector []}
+ */
+let lines;
+
+/**
  * @typedef {{
  * pos: Vector,
  * age: number,
@@ -146,6 +151,12 @@ function update() {
       }
     });
 
+    lines = times(3, () => {
+      let y = rndi(20, 60)
+      let x = rndi(40,160)
+      return vec(x,y);
+    });
+
     target = {
       trueX: x + 100,
       y: G.HEIGHT/2,
@@ -173,6 +184,20 @@ function update() {
   color('light_cyan');
   rect(0, 0, G.WIDTH, G.PUCKPOSMIN - 3);
   rect(0, G.PUCKPOSMAX + 3, G.WIDTH, G.HEIGHT - G.PUCKPOSMAX - 3);
+
+  if (puck.speed >= 0.6 && puck.state == STATE.FREE){
+    color("light_black")
+    lines.forEach((v) => {
+
+      line(v.x, v.y, v.x + 40 * ((Math.pow(puck.speed,1.5))/2), v.y, 0.5);
+      v.x -= puck.speed*2 + 1
+      if (v.x <= -40 * ((puck.speed)/2)){
+        v.x = wrap(v.x, -40 * ((puck.speed)/2), G.WIDTH)
+        v.y = rndi(20,60)
+      }
+    })
+  }
+  
 
   //draw target
   let relativeX = target.trueX - puck.trueX 
