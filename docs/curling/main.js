@@ -42,6 +42,7 @@ const G = {
 
   PUCKDECCELERATION: 0.002,
 
+  METER: 60,
   PARADIST: 100,
 }
 // PUCK VERT is the speed the Puck moves up and down in vertical selection
@@ -92,7 +93,6 @@ let puck;
  */
 let objects;
 
-
 /**
  * @typedef {{
  * trueX: number
@@ -138,13 +138,32 @@ let distance; //distance from target
 
 function update() {
   if (!ticks) {
+    /* let trials = 0
+    let sample = 0
+    while (trials < 122){
+      let multiplier = 1;
+      if(sample <= 14){
+        multiplier = 1.5
+      } else if(sample <= 28){
+        multiplier = 1
+      } else if(sample <= 60){
+        multiplier = 0.5
+      } else {
+        multiplier = 0
+      }
+      let score = 500 - sample * 8
+      score *= multiplier
+      console.log("Distance: " + sample + ", Score: " + score + " Multiplier: " + multiplier)
+      trials += 1
+      sample += 0.5
+    } */
     distance = -1;
 
-    let x = 50;
-    objects = times(rndi(5, 10), () => {
+    let x = G.PARADIST;
+    objects = times(rndi(3, 10), () => {
       let y = rndi(13, 67)
-      x += rndi(60,120)
-      console.log(x);
+      
+      x += rndi(G.WIDTH/5,G.WIDTH/2)
       return {
         trueX: x,
         y: y,
@@ -159,7 +178,7 @@ function update() {
     });
 
     target = {
-      trueX: x + 100,
+      trueX: (ceil((x + 50)/G.METER)*G.METER) + 20,
       y: G.HEIGHT/2,
       innerRadius: 14,
       outerRadius: 28
@@ -189,12 +208,24 @@ function update() {
     line(x, 0, x,80);
   }
 
+  color('light_yellow')
+  if (puck.trueX <= G.PARADIST){
+    line(140,0,140,80,2);
+  } else {
+    if (puck.trueX >= G.PARADIST + 20){
+      let line1 = (floor((puck.trueX - 20)/ 120) * 120) + 20
+      let relative1 = line1 - puck.trueX 
+      line(G.PARADIST + relative1, 0 ,G.PARADIST + relative1, 80)
+    }
+    let line2 = (ceil((puck.trueX - 20)/ 120) * 120) + 20
+    let relative2 = line2 - puck.trueX 
+    line(G.PARADIST + relative2, 0 ,G.PARADIST + relative2, 80)
+  }
+
   // WALLS
   color('light_cyan');
   rect(0, 0, G.WIDTH, G.PUCKPOSMIN - 3);
   rect(0, G.PUCKPOSMAX + 3, G.WIDTH, G.HEIGHT - G.PUCKPOSMAX - 3);
-
-  
 
   if (puck.speed >= 0.6 && puck.state == STATE.FREE){
     color("light_black")
@@ -208,7 +239,6 @@ function update() {
       }
     })
   }
-  
 
   //draw target
   let relativeX = target.trueX - puck.trueX 
@@ -243,7 +273,7 @@ function update() {
   color("black");
   text(`SHOTS LEFT: ${puck.lives}`, vec(G.WIDTH/2 - 37, 4));
 
-  if (distance == -1) { text(`DIST: ${floor(10 * (target.trueX - puck.trueX)/60)/10}m`, 5, G.HEIGHT - 5); }
+  if (distance == -1) { text(`DIST: ${floor(10 * (target.trueX - puck.trueX)/G.METER)/10}m`, 5, G.HEIGHT - 5); }
 
   switch (puck.state) {
     case STATE.POSITION:
@@ -366,17 +396,31 @@ function update() {
       if (!puck.receivedScore) {
         let relativeX = target.trueX - puck.trueX;
         //if target is on screen
-        if (relativeX - target.outerRadius <= G.WIDTH - G.PARADIST) {
+        if (relativeX - target.outerRadius <= G.WIDTH - G.PARADIST && relativeX >= -G.PARADIST - target.outerRadius) {
           let targetCenter = vec(G.PARADIST + relativeX, target.y);
           distance = puck.pos.distanceTo(targetCenter);
-          let score = 500 - distance * 2 - (floor(distance/target.innerRadius) * distance) * 3;
-          score = clamp(score, 0, 1000);
-          if ((floor(distance/target.innerRadius) == 0)) { myAddScore(score * 2); play("lucky"); } else { myAddScore(score); play("coin"); }
-          //100 - distance - (floor(distance/innerRadius) * distance) - (floor(distance/outerRadius) * distance)
-            //inner radius gets 2x multiplier
+          let multiplier = 0;
+          if(distance <= target.innerRadius){
+            multiplier = 1.5
+          } else if(distance <= target.outerRadius){
+            multiplier = 1
+          } else if(distance <= G.METER){
+            multiplier = 0.5
           }
-          puck.receivedScore = true;
+          let score = 500 - distance * 8
+          score *= multiplier
+          score = clamp(score, 0, 750);
+          if (multiplier > 0){
+            myAddScore(score, G.WIDTH/2, 20, "yellow")
+            if (multiplier > 1){
+              play("lucky")
+            } else {
+              play("coin")
+            }
+          }
+        } 
       }
+      puck.receivedScore = true;
       //wait for player to click for next shot if they have lives left
       color("black");
       if (puck.lives > 0) {
@@ -384,7 +428,7 @@ function update() {
         rect(G.WIDTH/2 - 60, G.HEIGHT - 20, 120, 10);
         color("black");
         text("CLICK FOR NEXT SHOT", G.WIDTH/2 - 55, G.HEIGHT - 15);
-        if (distance != -1) { text(`YOU WERE ${floor(100 * (distance/60))/100}m AWAY!`, G.WIDTH/2 - 50, G.HEIGHT/2); };
+        if (distance != -1) { text(`YOU WERE ${floor(100 * (distance/G.METER))/100}m AWAY!`, G.WIDTH/2 - 50, G.HEIGHT/2); };
       } else {
         end("YOU FINISHED!!");
       }
@@ -404,10 +448,10 @@ function update() {
       
         //empty and repopulate objects array
         objects = [];
-        let x = 50;
-        objects = times(rndi(5, 10), () => {
+        let x = G.PARADIST;
+        objects = times(rndi(3, 10), () => {
           let y = rndi(13, 67)
-          x += rndi(60,120)
+          x += rndi(G.WIDTH/5,G.WIDTH/2)
           return {
             trueX: x,
             y: y,
@@ -416,7 +460,7 @@ function update() {
         });
 
         //reset target value
-        target.trueX = x + 100;
+        target.trueX = (ceil((x + 50)/G.METER)*G.METER) + 20;
 
         //change to position state
         puck.state = STATE.POSITION;
