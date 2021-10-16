@@ -204,7 +204,7 @@ function update() {
       color("light_black");
       rect(G.WIDTH/2 - 20, G.HEIGHT - 6, 40, 5);
       color("light_red");
-      rect(G.WIDTH/2 - 20, G.HEIGHT - 6, (puck.speed/G.PUCKSPEEDMAX) * 40, 5);
+      rect(G.WIDTH/2 - 20, G.HEIGHT - 6, ((puck.speed - G.PUCKSPEEDMIN)/(G.PUCKSPEEDMAX - G.PUCKSPEEDMIN)) * 40, 5);
       // reuse our reverse logic for STATE.ANGLE, 
       // determines power bar growth && puck.speed value from 0 - 100
       
