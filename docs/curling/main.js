@@ -129,8 +129,12 @@ options = {
   theme: "shape"
 };
 
+let distance; //distance from target
+
 function update() {
   if (!ticks) {
+    distance = -1;
+
     let x = 50;
     objects = times(rndi(5, 10), () => {
       let y = rndi(13, 67)
@@ -203,7 +207,7 @@ function update() {
   color("black");
   text(`SHOTS LEFT: ${puck.lives}`, vec(G.WIDTH/2 - 37, 4));
 
-  text(`DIST: ${floor(10 * (target.trueX - puck.trueX)/60)/10}m`, 5, G.HEIGHT - 5);
+  if (distance == -1) { text(`DIST: ${floor(10 * (target.trueX - puck.trueX)/60)/10}m`, 5, G.HEIGHT - 5); }
 
   switch (puck.state) {
     case STATE.POSITION:
@@ -325,7 +329,7 @@ function update() {
         //if target is on screen
         if (relativeX - target.outerRadius <= G.WIDTH - G.PARADIST) {
           let targetCenter = vec(G.PARADIST + relativeX, target.y);
-          let distance = puck.pos.distanceTo(targetCenter);
+          distance = puck.pos.distanceTo(targetCenter);
           let score = 500 - distance - (floor(distance/target.innerRadius) * distance);
           if ((floor(distance/target.innerRadius) == 0)) { myAddScore(score * 2); } else { myAddScore(score); }
           //100 - distance - (floor(distance/innerRadius) * distance) - (floor(distance/outerRadius) * distance)
@@ -336,11 +340,15 @@ function update() {
       //wait for player to click for next shot if they have lives left
       color("black");
       if (puck.lives > 0) {
-        text("CLICK FOR NEXT SHOT", G.WIDTH/2 - 50, G.HEIGHT/2);
+        color("light_green");
+        rect(G.WIDTH/2 - 60, G.HEIGHT - 20, 120, 10);
+        color("black");
+        text("CLICK FOR NEXT SHOT", G.WIDTH/2 - 55, G.HEIGHT - 15);
+        if (distance != -1) { text(`YOU WERE ${floor(100 * (distance/60))/100}m AWAY!`, G.WIDTH/2 - 50, G.HEIGHT/2); };
       } else {
         end("YOU FINISHED!!");
       }
-      if (input.isJustPressed) {
+      if (input.isJustPressed && input.pos.x > G.WIDTH/2 - 60 && input.pos.x < G.WIDTH/2 + 60 && input.pos.y > G.HEIGHT - 20 && input.pos.y < G.HEIGHT - 10) {
         //reset puck values
         puck.pos = vec(10, G.HEIGHT / 2);
         puck.target = vec(10, G.HEIGHT / 2);
@@ -350,7 +358,9 @@ function update() {
         puck.trueX = 10;
         puck.scrubbing = false;
         puck.receivedScore = false;
-        
+
+        //reset distance
+        distance = -1;
       
         //empty and repopulate objects array
         objects = [];
