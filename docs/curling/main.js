@@ -51,9 +51,10 @@ const G = {
 
 // WITH OUR CURRENT NUMBERS
 // MAX POWER GOES 16m unaided + unimpeded
+// MIDDLE POWER GOES 9m unaided + unimpeded
 // MIN POWER GOES 4m unaided + unimpeded
-// The average distance at 9 objects is 14m
-// The average distance at 3 objects is 6m
+// The average distance at 9 (max) objects  is 14m
+// The average distance at 3 (min) objects is 6m
 
 const STATE = {
   POSITION: 0,
@@ -271,7 +272,7 @@ function update() {
       }
     }
     return disappear;
-  }); 
+  });
 
   color("transparent");
   let scrubCollider = rect(input.pos, 4).isColliding.char.a;
