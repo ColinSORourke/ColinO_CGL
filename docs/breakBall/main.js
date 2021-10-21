@@ -72,7 +72,7 @@ let modRate;
 
 options = {
   viewSize: {x: G.WIDTH, y: G.HEIGHT},
-  seed: 3,
+  seed: 5,
   isPlayingBgm: true,
   isReplayEnabled: true,
   theme: "pixel", 
